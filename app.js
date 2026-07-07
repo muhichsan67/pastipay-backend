@@ -9,8 +9,8 @@ const allowedOrigins = [
 'http://localhost:5173', // URL bawaan jika React Anda menggunakan Vite di lokal
 'http://localhost:3000', // URL bawaan jika React Anda menggunakan Create React App
 'https://pastipay-frontend.vercel.app', // Daftarkan juga URL produksi frontend Anda nanti di sini jika sudah dideploy
-'https://pastipay.vercel.app/',
-'https://pastipay-backend.vercel.app/',
+'https://pastipay.vercel.app',          // ⚠️ Hapus tanda / di akhir
+'https://pastipay-backend.vercel.app'   // ⚠️ Hapus tanda / di akhir
 ];
 
 // 2. Pasang middleware CORS dengan konfigurasi khusus Session
@@ -20,8 +20,8 @@ origin: function (origin, callback) {
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) === -1) {
-    const msg = 'Akses CORS diblokir untuk origin ini karena alasan keamanan.';
-    return callback(new Error(msg), false);
+        const msg = 'Akses CORS diblokir untuk origin ini karena alasan keamanan.';
+        return callback(new Error(msg), false);
     }
     return callback(null, true);
 },
