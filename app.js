@@ -9,7 +9,8 @@ const allowedOrigins = [
 'http://localhost:5173', // URL bawaan jika React Anda menggunakan Vite di lokal
 'http://localhost:3000', // URL bawaan jika React Anda menggunakan Create React App
 'https://pastipay-frontend.vercel.app', // Daftarkan juga URL produksi frontend Anda nanti di sini jika sudah dideploy
-'https://pastipay.vercel.app/'
+'https://pastipay.vercel.app/',
+'https://pastipay-backend.vercel.app/',
 ];
 
 // 2. Pasang middleware CORS dengan konfigurasi khusus Session
