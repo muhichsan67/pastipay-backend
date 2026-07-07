@@ -1,0 +1,111 @@
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <div class="page-title"><i class="bi bi-graph-up-arrow me-2 text-primary"></i>Kurs Mata Uang</div>
+        <div class="page-subtitle">Data nilai tukar dari Fixer.io</div>
+    </div>
+    <form action="/admin/fetch-rate" method="POST">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise me-2"></i>Perbarui Kurs
+        </button>
+    </form>
+</div>
+
+<!-- Stats Summary -->
+<% if(rates && rates.length > 0) { %>
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card stat-card bg-primary text-white">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="stat-icon bg-white bg-opacity-25">
+                    <i class="bi bi-currency-dollar text-white"></i>
+                </div>
+                <div>
+                    <div class="fw-bold fs-4"><%= rates[0].rate ? parseFloat(rates[0].rate).toLocaleString('id-ID', {maximumFractionDigits: 2}) : '-' %></div>
+                    <small class="opacity-75"><%= rates[0].from_currency %> → <%= rates[0].to_currency %> (Terbaru)</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card stat-card bg-success text-white">
+            <div class="card-body d-flex align-items-center gap-3">
+                <div class="stat-icon bg-white bg-opacity-25">
+                    <i class="bi bi-database text-white"></i>
+                </div>
+                <div>
+                    <div class="fw-bold fs-4"><%= rates.length %></div>
+                    <small class="opacity-75">Total Data Kurs</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<% } %>
+
+<!-- Table -->
+<div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-table me-2"></i>Riwayat Kurs</h6>
+        <small class="text-muted"><%= rates ? rates.length : 0 %> data</small>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:60px">#</th>
+                        <th>Dari</th>
+                        <th>Ke</th>
+                        <th>Nilai Tukar</th>
+                        <th>Diperbarui</th>
+                        <th style="width:100px">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(rates && rates.length > 0) { %>
+                    <% rates.forEach(function(r, i) { %>
+                    <tr>
+                        <td><span class="badge bg-light text-secondary"><%= i + 1 %></span></td>
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold fs-6 px-3 py-2">
+                                <%= r.from_currency %>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge bg-success bg-opacity-10 text-success fw-semibold fs-6 px-3 py-2">
+                                <%= r.to_currency %>
+                            </span>
+                        </td>
+                        <td>
+                            <strong class="text-dark"><%= parseFloat(r.rate).toLocaleString('id-ID', {minimumFractionDigits: 2, maximumFractionDigits: 8}) %></strong>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                <i class="bi bi-clock me-1"></i>
+                                <%= r.updated_at ? new Date(r.updated_at).toLocaleString('id-ID') : '-' %>
+                            </small>
+                        </td>
+                        <td>
+                            <form action="/admin/rates/delete/<%= r.id %>" method="POST"
+                                  onsubmit="return confirm('Hapus data kurs ini?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                    <% } else { %>
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                            Belum ada data kurs. Klik "Perbarui Kurs" untuk mengambil data terbaru.
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

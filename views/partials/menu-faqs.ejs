@@ -1,0 +1,124 @@
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <div class="page-title"><i class="bi bi-patch-question me-2 text-info"></i>FAQ</div>
+        <div class="page-subtitle">Kelola pertanyaan yang sering diajukan</div>
+    </div>
+    <% if(editData) { %>
+    <a href="/admin/dashboard?tab=faqs" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Batal Edit
+    </a>
+    <% } %>
+</div>
+
+<div class="row g-4">
+    <!-- Form Card -->
+    <div class="col-12 col-lg-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0 fw-bold">
+                    <i class="bi bi-<%= editData ? 'pencil' : 'plus-circle' %> me-2 text-<%= editData ? 'warning' : 'info' %>"></i>
+                    <%= editData ? 'Edit FAQ' : 'Tambah FAQ Baru' %>
+                </h6>
+            </div>
+            <div class="card-body">
+                <form action="/admin/faqs/save" method="POST">
+                    <% if(editData) { %>
+                    <input type="hidden" name="id" value="<%= editData.id %>">
+                    <% } %>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Pertanyaan <span class="text-danger">*</span></label>
+                        <input type="text" name="question" class="form-control"
+                               placeholder="Tulis pertanyaan di sini..."
+                               value="<%= editData ? editData.question : '' %>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Jawaban <span class="text-danger">*</span></label>
+                        <textarea name="answer" class="form-control" rows="5"
+                                  placeholder="Tulis jawaban lengkap..." required><%= editData ? editData.answer : '' %></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">Urutan Prioritas</label>
+                        <input type="number" name="order_priority" class="form-control"
+                               placeholder="0" min="0"
+                               value="<%= editData ? editData.order_priority : 0 %>">
+                        <div class="form-text">Angka lebih kecil = tampil lebih atas.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-<%= editData ? 'warning' : 'info' %> w-100 text-white">
+                        <i class="bi bi-save me-2"></i><%= editData ? 'Simpan Perubahan' : 'Tambah FAQ' %>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="col-12 col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-table me-2"></i>Daftar FAQ</h6>
+                <span class="badge bg-info rounded-pill"><%= faqs ? faqs.length : 0 %></span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:60px">Urutan</th>
+                                <th>Pertanyaan</th>
+                                <th>Jawaban</th>
+                                <th style="width:110px">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(faqs && faqs.length > 0) { %>
+                            <% faqs.forEach(function(f) { %>
+                            <tr>
+                                <td class="text-center">
+                                    <span class="badge bg-info bg-opacity-10 text-info fw-bold"><%= f.order_priority %></span>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold" style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                        <%= f.question %>
+                                    </div>
+                                </td>
+                                <td>
+                                    <small class="text-muted" style="max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">
+                                        <%= f.answer %>
+                                    </small>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a href="?tab=faqs&editId=<%= f.id %>"
+                                           class="btn btn-sm btn-outline-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="/admin/faqs/delete/<%= f.id %>" method="POST"
+                                              onsubmit="return confirm('Hapus FAQ ini?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                            <% } else { %>
+                            <tr>
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    <i class="bi bi-patch-question fs-2 d-block mb-2"></i>
+                                    Belum ada FAQ. Tambahkan yang pertama!
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

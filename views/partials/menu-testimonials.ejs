@@ -1,0 +1,162 @@
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <div class="page-title"><i class="bi bi-star-half me-2 text-warning"></i>Testimonial</div>
+        <div class="page-subtitle">Kelola data ulasan pelanggan</div>
+    </div>
+    <% if(editData) { %>
+    <a href="/admin/dashboard?tab=testimonials" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left me-1"></i>Batal Edit
+    </a>
+    <% } %>
+</div>
+
+<div class="row g-4">
+    <!-- Form Card -->
+    <div class="col-12 col-lg-4">
+        <div class="card h-auto">
+            <div class="card-header">
+                <h6 class="mb-0 fw-bold">
+                    <i class="bi bi-<%= editData ? 'pencil' : 'plus-circle' %> me-2 text-<%= editData ? 'warning' : 'primary' %>"></i>
+                    <%= editData ? 'Edit Testimonial' : 'Tambah Testimonial' %>
+                </h6>
+            </div>
+            <div class="card-body">
+                <form action="/admin/testimonials/save" method="POST">
+                    <% if(editData) { %>
+                    <input type="hidden" name="id" value="<%= editData.id %>">
+                    <% } %>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Nama <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control"
+                               placeholder="Nama pelanggan"
+                               value="<%= editData ? editData.name : '' %>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Jabatan <span class="text-danger">*</span></label>
+                        <input type="text" name="position" class="form-control"
+                               placeholder="Contoh: CEO, Finance Manager"
+                               value="<%= editData ? editData.position : '' %>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Perusahaan <span class="text-danger">*</span></label>
+                        <input type="text" name="company" class="form-control"
+                               placeholder="Nama perusahaan"
+                               value="<%= editData ? editData.company : '' %>" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Rating <span class="text-danger">*</span></label>
+                        <select name="rating" class="form-select" required>
+                            <% [5,4,3,2,1].forEach(function(s) { %>
+                            <option value="<%= s %>" <%= editData && editData.rating == s ? 'selected' : (!editData && s === 5 ? 'selected' : '') %>>
+                                <%= '★'.repeat(s) + '☆'.repeat(5 - s) %> (<%= s %>/5)
+                            </option>
+                            <% }) %>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Konten Ulasan <span class="text-danger">*</span></label>
+                        <textarea name="content" class="form-control" rows="4"
+                                  placeholder="Isi ulasan pelanggan..." required><%= editData ? editData.content : '' %></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" name="is_active" value="1" id="isActiveSwitch"
+                                   <%= !editData || editData.is_active == 1 ? 'checked' : '' %>>
+                            <label class="form-check-label fw-semibold" for="isActiveSwitch">
+                                Tampilkan di website
+                            </label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-<%= editData ? 'warning' : 'primary' %> w-100">
+                        <i class="bi bi-save me-2"></i><%= editData ? 'Simpan Perubahan' : 'Tambah Testimonial' %>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="col-12 col-lg-8">
+        <div class="card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h6 class="mb-0 fw-bold"><i class="bi bi-table me-2"></i>Daftar Testimonial</h6>
+                <span class="badge bg-primary rounded-pill"><%= testimonials ? testimonials.length : 0 %></span>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="width:50px">#</th>
+                                <th>Pelanggan</th>
+                                <th>Rating</th>
+                                <th>Status</th>
+                                <th style="width:110px">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if(testimonials && testimonials.length > 0) { %>
+                            <% testimonials.forEach(function(t, i) { %>
+                            <tr>
+                                <td><small class="text-muted"><%= i + 1 %></small></td>
+                                <td>
+                                    <div class="fw-semibold"><%= t.name %></div>
+                                    <small class="text-muted"><%= t.position %> — <%= t.company %></small>
+                                    <div class="text-muted small mt-1" style="max-width:250px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                                        <%= t.content %>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="stars">
+                                        <% for(let s=1; s<=5; s++) { %>
+                                            <i class="bi bi-star<%= s <= t.rating ? '-fill' : '' %>"></i>
+                                        <% } %>
+                                    </span>
+                                    <small class="text-muted d-block"><%= t.rating %>/5</small>
+                                </td>
+                                <td>
+                                    <% if(t.is_active) { %>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">Aktif</span>
+                                    <% } else { %>
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle">Nonaktif</span>
+                                    <% } %>
+                                </td>
+                                <td>
+                                    <div class="d-flex gap-1">
+                                        <a href="?tab=testimonials&editId=<%= t.id %>"
+                                           class="btn btn-sm btn-outline-warning" title="Edit">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="/admin/testimonials/delete/<%= t.id %>" method="POST"
+                                              onsubmit="return confirm('Hapus testimonial ini?')">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <% }) %>
+                            <% } else { %>
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted">
+                                    <i class="bi bi-star fs-2 d-block mb-2"></i>
+                                    Belum ada testimonial. Tambahkan yang pertama!
+                                </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

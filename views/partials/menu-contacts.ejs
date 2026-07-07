@@ -1,0 +1,123 @@
+<!-- Page Header -->
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <div>
+        <div class="page-title"><i class="bi bi-envelope-paper me-2 text-success"></i>Kontak Masuk</div>
+        <div class="page-subtitle">Daftar pengajuan dari calon mitra / pelanggan</div>
+    </div>
+    <div class="d-flex gap-2">
+        <span class="badge bg-warning text-dark px-3 py-2">
+            <i class="bi bi-hourglass-split me-1"></i>
+            Pending: <%= contacts ? contacts.filter(c => c.status === 'Pending').length : 0 %>
+        </span>
+        <span class="badge bg-success px-3 py-2">
+            <i class="bi bi-check-circle me-1"></i>
+            Total: <%= contacts ? contacts.length : 0 %>
+        </span>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex align-items-center justify-content-between">
+        <h6 class="mb-0 fw-bold"><i class="bi bi-table me-2"></i>Semua Pengajuan Kontak</h6>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th style="width:50px">#</th>
+                        <th>Nama & Jabatan</th>
+                        <th>Kontak</th>
+                        <th>Perusahaan</th>
+                        <th>Est. Volume</th>
+                        <th>Pesan</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
+                        <th style="width:130px">Ubah Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(contacts && contacts.length > 0) { %>
+                    <% contacts.forEach(function(c, i) { %>
+                    <tr>
+                        <td><small class="text-muted"><%= i + 1 %></small></td>
+                        <td>
+                            <div class="fw-semibold"><%= c.full_name %></div>
+                            <small class="text-muted"><%= c.job_title %></small>
+                        </td>
+                        <td>
+                            <div><i class="bi bi-envelope me-1 text-muted"></i><small><%= c.company_email %></small></div>
+                            <div><i class="bi bi-telephone me-1 text-muted"></i><small><%= c.phone_number %></small></div>
+                        </td>
+                        <td>
+                            <div class="fw-semibold"><%= c.company_website || '-' %></div>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary bg-opacity-10 text-primary fw-semibold"><%= c.estimated_volume %></span>
+                        </td>
+                        <td>
+                            <% if(c.message) { %>
+                            <span data-bs-toggle="tooltip" title="<%= c.message %>"
+                                  style="cursor:pointer; max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">
+                                <small class="text-muted"><%= c.message %></small>
+                            </span>
+                            <% } else { %>
+                            <small class="text-muted">-</small>
+                            <% } %>
+                        </td>
+                        <td>
+                            <% if(c.status === 'Pending') { %>
+                            <span class="badge badge-pending px-2 py-1">
+                                <i class="bi bi-hourglass-split me-1"></i>Pending
+                            </span>
+                            <% } else if(c.status === 'Processed') { %>
+                            <span class="badge badge-processed px-2 py-1">
+                                <i class="bi bi-check-circle me-1"></i>Processed
+                            </span>
+                            <% } else { %>
+                            <span class="badge badge-closed px-2 py-1">
+                                <i class="bi bi-x-circle me-1"></i>Closed
+                            </span>
+                            <% } %>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                <%= c.created_at ? new Date(c.created_at).toLocaleDateString('id-ID', {day:'2-digit', month:'short', year:'numeric'}) : '-' %>
+                            </small>
+                        </td>
+                        <td>
+                            <form action="/admin/contacts/status/<%= c.id %>" method="POST">
+                                <div class="input-group input-group-sm">
+                                    <select name="status" class="form-select form-select-sm">
+                                        <option value="Pending" <%= c.status === 'Pending' ? 'selected' : '' %>>Pending</option>
+                                        <option value="Processed" <%= c.status === 'Processed' ? 'selected' : '' %>>Processed</option>
+                                        <option value="Closed" <%= c.status === 'Closed' ? 'selected' : '' %>>Closed</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary">
+                                        <i class="bi bi-check-lg"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    <% }) %>
+                    <% } else { %>
+                    <tr>
+                        <td colspan="9" class="text-center py-5 text-muted">
+                            <i class="bi bi-inbox fs-2 d-block mb-2"></i>
+                            Belum ada pesan kontak masuk.
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Enable Bootstrap tooltips for message preview
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+        new bootstrap.Tooltip(el, { placement: 'left' });
+    });
+</script>

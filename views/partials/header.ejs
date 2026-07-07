@@ -1,0 +1,28 @@
+<div id="topbar">
+    <div class="topbar-left">
+        <!-- Mobile toggle -->
+        <button class="btn btn-sm btn-outline-secondary d-md-none" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+        </button>
+        <div>
+            <div class="page-title d-none d-sm-block">Dashboard Admin</div>
+        </div>
+    </div>
+    <div class="topbar-right">
+        <div class="admin-badge">
+            <div class="avatar"><%= name.charAt(0).toUpperCase() %></div>
+            <span><%= name %></span>
+        </div>
+        <a href="/admin/logout" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-box-arrow-right"></i>
+            <span class="d-none d-sm-inline ms-1">Keluar</span>
+        </a>
+    </div>
+</div>
+
+<script>
+    // Mobile sidebar toggle
+    document.getElementById('sidebarToggle')?.addEventListener('click', () => {
+        document.getElementById('sidebar').classList.toggle('show');
+    });
+</script>

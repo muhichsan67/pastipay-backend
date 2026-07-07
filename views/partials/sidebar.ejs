@@ -1,0 +1,28 @@
+<div id="sidebar">
+    <div class="sidebar-brand">
+        <div class="brand-icon"><i class="bi bi-currency-exchange"></i></div>
+        <span>PastiPay CMS</span>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Menu Utama</div>
+        <a href="/admin/dashboard?tab=rates"
+           class="sidebar-link <%= activeTab === 'rates' ? 'active' : '' %>">
+            <i class="bi bi-graph-up-arrow"></i> Kurs Mata Uang
+        </a>
+        <a href="/admin/dashboard?tab=testimonials"
+           class="sidebar-link <%= activeTab === 'testimonials' ? 'active' : '' %>">
+            <i class="bi bi-star-half"></i> Testimonial
+        </a>
+        <a href="/admin/dashboard?tab=faqs"
+           class="sidebar-link <%= activeTab === 'faqs' ? 'active' : '' %>">
+            <i class="bi bi-patch-question"></i> FAQ
+        </a>
+        <a href="/admin/dashboard?tab=contacts"
+           class="sidebar-link <%= activeTab === 'contacts' ? 'active' : '' %>">
+            <i class="bi bi-envelope-paper"></i> Kontak Masuk
+        </a>
+    </nav>
+    <div class="p-3" style="border-top: 1px solid rgba(255,255,255,.08);">
+        <small class="text-white-50">v1.0.0 &copy; PastiPay</small>
+    </div>
+</div>
