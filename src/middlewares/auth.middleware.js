@@ -1,16 +1,17 @@
 const jwt = require('jsonwebtoken');
 
 const verifyEncryptedToken = (req, res, next) => {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-    if (!token) return res.status(401).json({ success: false, message: 'Token kosong!' });
+    next();
+    // const authHeader = req.headers['authorization'];
+    // const token = authHeader && authHeader.split(' ')[1];
+    // if (!token) return res.status(401).json({ success: false, message: 'Token kosong!' });
 
-    try {
-        req.frontendApp = jwt.verify(token, process.env.API_SECRET_TOKEN);
-        next();
-    } catch (error) {
-        return res.status(403).json({ success: false, message: 'Token tidak valid.' });
-    }
+    // try {
+    //     req.frontendApp = jwt.verify(token, process.env.API_SECRET_TOKEN);
+    //     next();
+    // } catch (error) {
+    //     return res.status(403).json({ success: false, message: 'Token tidak valid.' });
+    // }
 };
 
 const isAdmin = (req, res, next) => {
