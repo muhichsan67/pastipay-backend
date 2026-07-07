@@ -9,7 +9,24 @@ module.exports = {
     async getFaqs(req, res, next) { try { res.json({ success: true, data: await FaqRepository.getAll() }); } catch (e) { next(e); } },
     async submitContact(req, res, next) {
         try {
-            await ContactRepository.insert(req.body.name, req.body.email, req.body.subject || '', req.body.message);
+            const {
+                full_name,
+                job_title,
+                company_email,
+                company_website,
+                phone_number,
+                estimated_volume,
+                message
+            } = req.body;
+            await ContactRepository.insert(
+                full_name,
+                job_title ?? "Default",
+                company_email,
+                company_website ?? null,
+                phone_number,
+                estimated_volume,
+                message ?? null
+            );
             res.status(201).json({ success: true, message: 'Terkirim!' });
         } catch (e) { next(e); }
     }

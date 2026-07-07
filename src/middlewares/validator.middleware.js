@@ -19,8 +19,12 @@ const validateFaq = [
 
 const validateContact = [
     body('full_name').trim().notEmpty().escape(),
+    body('job_title').optional({ values: 'Default' }).trim().notEmpty().escape(),
     body('company_email').trim().isEmail().normalizeEmail(),
-    body('message').trim().notEmpty().escape()
+    body('company_website').optional({ values: 'null' }).trim().escape(),
+    body('phone_number').trim().notEmpty().escape(),
+    body('estimated_volume').trim().notEmpty().escape(),
+    body('message').optional({ values: 'null' }).trim().escape()
 ];
 
 const checkApiValidationError = (req, res, next) => {
